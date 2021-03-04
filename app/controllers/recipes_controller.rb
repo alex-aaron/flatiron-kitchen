@@ -10,17 +10,23 @@ class RecipesController < ApplicationController
 
     def edit
         @recipe = Recipe.find_by_id(params[:id])
+        @ingredients = @recipe.ingredients.build
     end
 
     def create
-        @recipe = Recipe.create(name: params[:recipe][:name])
+        @recipe = Recipe.create(recipe_params)
         redirect_to recipe_path(@recipe)
     end
 
     def update
         @recipe = Recipe.find_by_id(params[:id])
-        @recipe.name = params[:ingredient][:name]
-        @recipe.save
+        @recipe.update(recipe_params)
         redirect_to recipe_path(@recipe)
+    end
+
+    private
+
+    def recipe_params
+        params.require(:recipe).permit(:name, ingredient_ids:[])
     end
 end
